@@ -17,9 +17,7 @@ window.onload = function(){
     const tetrominoForms = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
     var minoSizeH = boardH / minosH;
     var minoSizeW = boardW / minosW;
-    var startingColum=Math.floor(minosW/2)-1;
-    var r=0;            // rotate state
-    var iteration=5;
+    var startingColum = Math.floor(minosW/2)-1;
 
     // sideline:
     ctx.beginPath();
@@ -33,33 +31,32 @@ window.onload = function(){
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    function rotate(){      // maybe rotate in both directions? (1=right, -1=left)
+    function rotate(r){      // maybe rotate in both directions? (1=right, -1=left)
         if(r<3) r++;
         else r=0;
+        return r;
     }
+
 
     class Tetromino{
         color;
-        size = 3;
         posX;
         posY;
-        rotation = 0;   // rotation: https://tetris.fandom.com/wiki/SRS
-        minos;          // form: https://tetris.fandom.com/wiki/Tetromino
+        rotation = 1;   // rotations: https://tetris.fandom.com/wiki/SRS
+        minos;          // forms: https://tetris.fandom.com/wiki/Tetromino
 
         //image;
         //imagepositions;
 
-        constructor(form, rotation){
-            this.rotation = rotation;
+        constructor(form){
             switch (form){
                 case 'I':
                     this.color = '#03EFF1';
-                    this.size = 4;
                     this.minos = [[1,1,1,1],[-1,-1,[0,1,2,3],-1],[2,2,2,2],[-1,[0,1,2,3],-1,-1]];
                     break;
                 case 'O':
                     this.color = '#EFF200';
-                    this.minos = [-1,[0,1],[0,1]];
+                    this.minos = [[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]]];
                     break;
                 case 'T':
                     this.color = '#A000F5';
@@ -109,8 +106,8 @@ window.onload = function(){
 
     function drawTetromino(tetromino){
         console.log('color: ' + tetromino.color);
-        for (let x in tetromino.minos[r]) {
-            let y = tetromino.minos[r][x];
+        for (let x in tetromino.minos[tetromino.rotation]) {
+            let y = tetromino.minos[tetromino.rotation][x];
             if (Array.isArray(y)){
                 for (let i of y) {
                     drawMino((tetromino.posX + parseInt(x)), tetromino.posY + i, tetromino.color);
@@ -124,25 +121,49 @@ window.onload = function(){
             }
         }
     }
-/*
-    let tL = new Tetromino('L', r);
-    tL.posX = startingColum;
-    tL.posY = iteration;
-    drawTetromino(tL);
-    console.log(tL);
 
-    let tI = new Tetromino('I', r);
-    tI.posX = startingColum;
-    tI.posY = iteration + 4;
-    drawTetromino(tI);
-    console.log(tI);
-*/
+
     class Game{
         level = 0;
         score = 0;
-        nextTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
+        currentTetromino;
+        nextTetromino;
 
+        constructor(){
+            this.drawUI();
+            this.currentTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
+            this.nextTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
+            this.previewTetromino(this.nextTetromino);
+            this.dropTetromino(this.currentTetromino);
+        }
 
+        drawUI(){
+            ctx.font = '32px Calibri';
+            ctx.fillStyle  = '#002ba2';
+            ctx.textBaseline = "hanging";
+            ctx.fillText('Score:', boardW+10, 10);
+            ctx.fillText('Level:', boardW+10, 50);
+            ctx.fillText('Next:', boardW+10, 90);
+            ctx.textAlign = "end";
+            ctx.fillText(this.score, boardW+190, 10);
+            ctx.fillText(this.level, boardW+190, 50);
+        }
+
+        previewTetromino(tetromino){
+            tetromino.rotation = 1;
+            tetromino.posX = minosW;
+            tetromino.posY = 3;
+            //console.log(tetromino);
+            drawTetromino(tetromino);
+        }
+
+        dropTetromino(tetromino){
+            tetromino.rotation = 0;
+            tetromino.posX = startingColum;
+            tetromino.posY = 0; // -3 on actual start
+            drawTetromino(tetromino);
+        }
     }
 
+    let g = new Game();
 }
