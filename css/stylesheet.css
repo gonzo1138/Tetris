@@ -1,0 +1,31 @@
+*{
+  margin:0;
+  padding:0;
+  margin-block-start:0;
+  margin-block-end:0;
+  margin-inline-start:0;
+  margin-inline-end:0;
+}
+
+html, body{
+	width:100%;
+	height:100%;
+	background-color: #ffd690;
+}
+
+#wrapper{
+    height: 100vH;
+    width: 100vW;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board{
+    border: 5px solid black;
+    background-color: #d4f8ff;
+}
+
+#hiddenimages{
+    display: none;
+}
