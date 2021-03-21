@@ -223,7 +223,7 @@ window.onload = function(){
             // todo: some fancy effect here...
             for (let i = row; i > 0; i--) {             // start at intended row
                 for (let j = 0; j < minosW; j++) {
-                    this.map[j][i] = this.map[j][i-1];  // let row sink
+                    this.map[j][i] = this.map[j][i-1];  // copy row from above
                     if(i===1) this.map[j][0] = false;   // fill fist row with nothingness again
                     // todo: extend with break if game is over
                 }
@@ -249,14 +249,48 @@ window.onload = function(){
             this.mapTetromino(tetromino);
             this.currentTetromino = this.nextTetromino;
             this.nextTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
-            // clear?
+            // clear first?
             this.previewTetromino(this.nextTetromino);
             this.scanForRows();
+        }
+
+        testColission(tetromino, testXoffset, testYoffset){
+            let test = false;
+            for (let x in tetromino.minos[tetromino.rotation]) {
+                let y = tetromino.minos[tetromino.rotation][x];
+                if (Array.isArray(y)){
+                    for (let i of y) {
+                        if ((tetromino.posX + parseInt(x) + testXoffset) > minosW || (tetromino.posX + parseInt(x) + testXoffset) < 0){
+                            test = true;
+                            console.log('wall-collision!');
+                        }
+                        else if(this.map[tetromino.posX + parseInt(x) + testXoffset][tetromino.posY + i + testYoffset]){
+                            test = true;
+                            console.log('mino-collision!');
+                        }
+                    }
+                } else {
+                    if (y > -1){
+                        if ((tetromino.posX + parseInt(x) + testXoffset) > minosW || (tetromino.posX + parseInt(x) + testXoffset) < 0){
+                            test = true;
+                            console.log('wall-collision!');
+                        }
+                        else if(this.map[tetromino.posX + parseInt(x) + testXoffset][tetromino.posY + i + testYoffset]){
+                            test = true;
+                            console.log('mino-collision!');
+                        }
+                    }
+                }
+            }
+            return test;
         }
 
         run(){
             window.requestAnimationFrame(function loop(){
                 // ???
+                if(this.testCollision(this.currentTetromino, this.currentTetromino.posX, this.currentTetromino.posY+1)){    // test for next row
+                    // ...
+                }
             });
         }
     }
