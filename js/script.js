@@ -1,6 +1,6 @@
 window.onload = function(){
     var board = document.getElementById('board');
-    if (!board.getContext) window.alert("Ein Browser der das Canvas-Element unterstützt ist für dieses Spiel voraussetzung...");
+    if (!board.getContext) window.alert("A browser supporting the canvas-element is needed for this game...");
     var ctx = board.getContext('2d');
 
     // setup:
@@ -11,10 +11,11 @@ window.onload = function(){
     var minosW    = 10;
     var boardH = 800;   // 800 bei 16 Reihen: 50px
     var boardW = 500;   // 500 bei 10 Spalten: 50px
-    // Randbreite = canvasbreite(html) - boardW
+    // Randbreite = canvasbreite(steht in html) - boardW
 
     // other Variables:
-    const tetrominoForms = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
+    const tetrominoForms = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];  // forms: https://tetris.fandom.com/wiki/Tetromino
+    const scoreForRows = [40, 100, 300, 400];                    // score for 1,2,3 or 4 rows at once  https://tetris.fandom.com/wiki/Scoring
     var minoSizeH = boardH / minosH;
     var minoSizeW = boardW / minosW;
     var startingColum = Math.floor(minosW/2)-1;
@@ -43,7 +44,7 @@ window.onload = function(){
         posX;
         posY;
         rotation = 1;   // rotations: https://tetris.fandom.com/wiki/SRS
-        minos;          // forms: https://tetris.fandom.com/wiki/Tetromino
+        minos;
 
         //image;
         //imagepositions;
@@ -102,21 +103,19 @@ window.onload = function(){
         ctx.strokeRect(startX, startY, minoSizeW, minoSizeH);
     }
 
-    //drawMino(3,3,'#EFF200');
-
     function drawTetromino(tetromino){
-        console.log('color: ' + tetromino.color);
+        //console.log('draw tetromino of color: ' + tetromino.color + ' at x:' + tetromino.posX + ' and y: ' + tetromino.posY);
         for (let x in tetromino.minos[tetromino.rotation]) {
             let y = tetromino.minos[tetromino.rotation][x];
             if (Array.isArray(y)){
                 for (let i of y) {
                     drawMino((tetromino.posX + parseInt(x)), tetromino.posY + i, tetromino.color);
-                    console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+i));
+                    //console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+i));
                 }
             } else {
                 if (y > -1){
                     drawMino(tetromino.posX + parseInt(x), tetromino.posY + y, tetromino.color);
-                    console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+y));
+                    //console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+y));
                 }
             }
         }
@@ -128,13 +127,20 @@ window.onload = function(){
         score = 0;
         currentTetromino;
         nextTetromino;
+        map = [];
+
 
         constructor(){
             this.drawUI();
             this.currentTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
             this.nextTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
             this.previewTetromino(this.nextTetromino);
+            this.createMap();
             this.dropTetromino(this.currentTetromino);
+
+            //test:
+            this.mapTetromino(this.currentTetromino);
+            this.drawMap();
         }
 
         drawUI(){
@@ -160,8 +166,98 @@ window.onload = function(){
         dropTetromino(tetromino){
             tetromino.rotation = 0;
             tetromino.posX = startingColum;
-            tetromino.posY = 0; // -3 on actual start
-            drawTetromino(tetromino);
+            tetromino.posY = 8; // -3 on actual start
+            //drawTetromino(tetromino);
+        }
+
+        createMap() {            // create empty map of the board
+            for (let i = 0; i < minosW; i++) {
+                this.map[i] = [];
+                for (let j = 0; j < minosH; j++) {
+                    this.map[i].push(false);
+                }
+            }
+        /*
+            // row elimination test:
+            let row = 1;                                // row intended to be removed
+            // map[col][row]
+            this.map[3][0] = '#123456';
+            this.map[4][1] = '#123456';
+            this.map[5][2] = '#123456';
+            for (let i = row; i > 0; i--) {             // start at intended row
+                for (let j = 0; j < minosW; j++) {
+                    this.map[j][i] = this.map[j][i-1];  // let row sink
+                    if(i===1) this.map[j][0] = false;   // fill fist row with nothingness again  todo: extend with break if game is over
+                }
+            }
+            console.log(this.map);
+        */
+        }
+
+        mapTetromino(tetromino){
+            console.log('mapping tetromino of color: ' + tetromino.color);
+            for (let x in tetromino.minos[tetromino.rotation]) {
+                let y = tetromino.minos[tetromino.rotation][x];
+                if (Array.isArray(y)){
+                    for (let i of y) {
+                        this.map[tetromino.posX + parseInt(x)][tetromino.posY + i] = tetromino.color;
+                    }
+                } else {
+                    if (y > -1){
+                        this.map[tetromino.posX + parseInt(x)][tetromino.posY + y] = tetromino.color;
+                    }
+                }
+            }
+        //    console.log(this.map);
+        }
+
+        drawMap(){
+            for(let col in this.map){
+                for(let row in this.map[col]){
+                    if(this.map[col][row]) drawMino(col, row, this.map[col][row]);
+                }
+            }
+        }
+
+        removeRow(row){
+            // todo: some fancy effect here...
+            for (let i = row; i > 0; i--) {             // start at intended row
+                for (let j = 0; j < minosW; j++) {
+                    this.map[j][i] = this.map[j][i-1];  // let row sink
+                    if(i===1) this.map[j][0] = false;   // fill fist row with nothingness again
+                    // todo: extend with break if game is over
+                }
+            }
+        }
+
+        scanForRows(){
+            let lines = [];
+            for(let i=0; i<=minosH; i++){
+                let counter = minosW;
+                for(let j=0; j<=minosW; j++){
+                    if (this.map[j][i]) counter--;
+                }
+                if(counter===0) lines.push(i);
+            }
+            if(lines.length > 0){
+                for(let row of lines) this.removeRow(row);                    // remove Rows
+                this.score += scoreForRows[lines.length-1] * (this.level+1);    // update score
+            }
+        }
+
+        landTetromino(tetromino){
+            this.mapTetromino(tetromino);
+            this.currentTetromino = this.nextTetromino;
+            this.nextTetromino = new Tetromino(tetrominoForms[getRandomInt(tetrominoForms.length-1)]);
+            // clear?
+            this.previewTetromino(this.nextTetromino);
+            this.scanForRows();
+        }
+
+        run(){
+            window.requestAnimationFrame(function loop(){
+                // ???
+            });
         }
     }
 
