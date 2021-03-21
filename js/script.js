@@ -149,8 +149,8 @@ window.onload = function(){
             ctx.textBaseline = "hanging";
             ctx.fillText('Score:', boardW+10, 10);
             ctx.fillText('Level:', boardW+10, 50);
-            ctx.fillText('Next:', boardW+10, 90);
-            ctx.textAlign = "end";
+            ctx.fillText('Next:', boardW+10, 130);
+            ctx.textAlign = 'end';
             ctx.fillText(this.score, boardW+190, 10);
             ctx.fillText(this.level, boardW+190, 50);
         }
@@ -158,7 +158,7 @@ window.onload = function(){
         previewTetromino(tetromino){
             tetromino.rotation = 1;
             tetromino.posX = minosW;
-            tetromino.posY = 3;
+            tetromino.posY = Math.floor(minosH/4);
             //console.log(tetromino);
             drawTetromino(tetromino);
         }
@@ -254,35 +254,34 @@ window.onload = function(){
             this.scanForRows();
         }
 
-        testColission(tetromino, testXoffset, testYoffset){
-            let test = false;
+        testCollision(tetromino, testXoffset, testYoffset){
             for (let x in tetromino.minos[tetromino.rotation]) {
                 let y = tetromino.minos[tetromino.rotation][x];
                 if (Array.isArray(y)){
                     for (let i of y) {
                         if ((tetromino.posX + parseInt(x) + testXoffset) > minosW || (tetromino.posX + parseInt(x) + testXoffset) < 0){
-                            test = true;
                             console.log('wall-collision!');
+                            return false;
                         }
                         else if(this.map[tetromino.posX + parseInt(x) + testXoffset][tetromino.posY + i + testYoffset]){
-                            test = true;
                             console.log('mino-collision!');
+                            return false;
                         }
                     }
                 } else {
                     if (y > -1){
                         if ((tetromino.posX + parseInt(x) + testXoffset) > minosW || (tetromino.posX + parseInt(x) + testXoffset) < 0){
-                            test = true;
                             console.log('wall-collision!');
+                            return false;
                         }
                         else if(this.map[tetromino.posX + parseInt(x) + testXoffset][tetromino.posY + i + testYoffset]){
-                            test = true;
                             console.log('mino-collision!');
+                            return false;
                         }
                     }
                 }
             }
-            return test;
+            return true;
         }
 
         run(){
@@ -290,7 +289,17 @@ window.onload = function(){
                 // ???
                 if(this.testCollision(this.currentTetromino, this.currentTetromino.posX, this.currentTetromino.posY+1)){    // test for next row
                     // ...
+                } else {
+                    this.landTetromino(this.currentTetromino);
+
                 }
+                if(this.testCollision(this.currentTetromino, this.currentTetromino.posX+1, this.currentTetromino.posY)){    // test for movement right
+                    // ...
+                }
+                if(this.testCollision(this.currentTetromino, this.currentTetromino.posX-1, this.currentTetromino.posY)){    // test for movement left
+                    // ...
+                }
+
             });
         }
     }
