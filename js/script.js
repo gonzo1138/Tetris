@@ -82,7 +82,6 @@ window.onload = function(){
         frameDuration;
         isFirstStepOfNewCycle = true;
         pause = false;
-        gameOver = false;
 
 
         constructor(){
@@ -97,13 +96,13 @@ window.onload = function(){
             config.mino.minoSizeW = config.boardW / config.minosW;
             config.startingColum = Math.floor(config.minosW/2)-1;
             this.frameDuration = config.speed / config.minoSizeH;
+            console.log(config.speed);
             if(config.startingColum < 3) window.alert("Check your board-size-settings...");
         }
 
         run(){
             // todo: reset everything to start a new game after another without reloading the page?  alternative: new Game-Object...
             this.drop();
-
         }
 
         drop(){
@@ -112,24 +111,25 @@ window.onload = function(){
             this.nextTetromino = this.getTetromino();
             // redraw ui with new nextTetromino:
             this.draw.clearCanvas();
-            this.draw.ui();
+            this.draw.ui(this.score, this.level, this.nextTetromino);
             // place new currentTetromino:
             this.currentTetromino.rotation = 0;
             this.currentTetromino.posX = config.startingColum;
-            this.currentTetromino.posY = 0;//-2;
+            this.currentTetromino.posY = 2//-2;
             this.transit();
         }
 
         transit(tetromino = this.currentTetromino){
-            console.log('Transit from ' + this.currentTetromino.posY-1 + ' to ' + this.currentTetromino.posY);
-
+            console.log('tetromino in transit from ' + (this.currentTetromino.posY-1) + ' to ' + this.currentTetromino.posY);
+            tetromino.offsetY = -1 * (config.mino.minoSizeH - 1);
             this.loop = setInterval(function () {
                 if(!game.pause) {
-                    game.draw.clearTetromino(tetromino);
-                    tetromino.offsetY++;
-                    game.draw.tetromino(tetromino);
-                    if (tetromino.offsetY === config.mino.minoSizeH - 1) {
-                        tetromino.offsetY = 0;
+                    if(tetromino.offsetY < 0){
+                        game.draw.clearBoard();//game.draw.clearTetromino();
+                        game.draw.map();
+                        tetromino.offsetY++;
+                        game.draw.tetromino(tetromino);
+                    } else {
                         game.step();
                     }
                 }
@@ -137,17 +137,19 @@ window.onload = function(){
         }
 
         step() {
-            if(!this.testCollision(0, 1)){
+            //if(!this.checkCollision(0, 1)){
+            this.map.calculatePossiblePositions(this.currentTetromino, 1);
+            if(this.map.checkPossiblePosition(this.currentTetromino.posX, this.currentTetromino.alignment)){
                 this.isFirstStepOfNewCycle = false;
                 this.currentTetromino.moveDown();
-                this.map.calculatePossiblePositions(this.currentTetromino);
                 this.draw.clearBoard();
+                this.draw.map();
                 this.transit();
             } else {
-                if(this.isFirstStepOfNewCycle) this.gameOver();
-                else this.process();
+                //if(this.isFirstStepOfNewCycle) this.gameOver();
+                //else
+                this.process();
             }
-
         }
 
         process(){
@@ -158,58 +160,34 @@ window.onload = function(){
                 this.skipRowCounter = 0;
             }
             this.isFirstStepOfNewCycle = true;
+            this.map.scanForLines();
+        }
+
+        checkCollision(columOffset=0, rowOffset=0, rotation=false){     // checks in map of precalculated possible positions, works only in current row!
+            let xPosition = this.currentTetromino.posX + columOffset;
+            let testRotation = this.currentTetromino.getAlignment();
+            if(rotation) testRotation = this.currentTetromino.getNextAlignment();
+            console.log(this.map.possibleTetrominoPositions);
+            return this.map.checkPossiblePosition(xPosition, testRotation);
         }
 
         testCollision(columOffset=0, rowOffset=0, rotation=false){
             let xPosition = this.currentTetromino.posX + columOffset;
             let yPosition = this.currentTetromino.posY + rowOffset;
-            let testRotation = this.currentTetromino.rotation;
-            if(rotation) testRotation = this.rotate(this.currentTetromino.rotation);
-            //todo: rework for absolute position and rotation from here on...
+            let testRotation = this.currentTetromino.getAlignment();
+            if(rotation) testRotation = this.currentTetromino.getNextAlignment();
 
             // test 1: with new rotation and offsets - are there walls?
-            if(this.wallCollisionTest(columOffset, rowOffset, testRotation)) {
+            if(this.map.wallCollisionTest(xPosition, testRotation)) {
                 // if so, can a wallkick be performed? -> are *there* minos?      https://tetris.wiki/Wall_kick
-                if (columOffset > 0) {
-                    if(this.wallCollisionTest(columOffset, rowOffset, testRotation)) {}
-                } else if (columOffset < 0) return true;
+                return !this.map.wallkickTest(this.currentTetromino, columOffset);
             }
 
             // test 2: xOffset with new rotation and offsets - are there minos?
-            if (this.minoCollisionTest(columOffset, rowOffset, testRotation)) return true;
+            if (this.map.minoCollisionTest(xPosition, yPosition, testRotation)) return true;
 
             // test 3: with new rotation - has the bottom been reached?
-            if (this.bottomCollisionTest(testRotation)) return true;
-
-        /*
-            if (columOffset !== 0) {
-                // calculate current tetromino-form-offsets for left and right (for test1)
-                let tetrominoLeft;
-                let tetrominoRight;
-                for (let x in this.currentTetromino.minos[this.currentTetromino.rotation]) {
-                    //let y = this.currentTetromino.minos[this.currentTetromino.rotation][x];
-                    //if (Array.isArray(y)) if (y[y.length-1] > minoBottom) minoBottom = y[y.length-1];
-                    //else if (y > minoBottom) minoBottom = y;
-
-
-                }
-                if (this.currentTetromino.posY + minoBottom > this.map[0].length - 1) {
-                    console.log('bottom-collision!');
-                    return true;
-                } else return false;
-
-                // xOffset test 1: are there walls? [true, go on]
-                // xOffset test 2: are there minos? [true, go on]
-                return false;
-
-                if (rowOffset > 0) {
-                    // calculate current tetromino-form-offset for bottom at every colum
-                    // yOffset test 1: is the boarder ahead? [true, process]
-                    // yOffset test 2: are there minos? [true, process]
-                    return false;
-                }
-            }
-        */
+            if (this.map.bottomCollisionTest(yPosition, testRotation)) return true;
 
             return false;   // no collision for intended step/move detected
         }
@@ -229,9 +207,10 @@ window.onload = function(){
             // see https://tetris.wiki/Random_Generator
             if(this.tetrominosWaiting.length === 0){
                 // create new set of all possible tetrominos:
-                for(let i=0; i<config.tetromino.form.length; i++){
-                    this.tetrominosWaiting.push(new Tetromino(config.tetromino.form[i]));
-                }
+                let forms = Object.keys(config.tetromino.form);
+                forms.forEach(form => {
+                    this.tetrominosWaiting.push(new Tetromino(form));
+                });
                 // shuffle that set:
                 for(let i=0; i<this.tetrominosWaiting.length;i++){
                     let rnd = Math.floor(Math.random() * this.tetrominosWaiting.length);
@@ -244,6 +223,12 @@ window.onload = function(){
             return this.tetrominosWaiting.pop();
         }
 
+        gameOver(){
+            //window.alert('Game Over!')
+            if(confirm('Start a new Game?')) location.reload();
+            else game.draw.clearTetromino();
+            //else window.location.href = "https://tetris.wiki/";
+        }
     }
 
     class Tetromino{
@@ -280,7 +265,7 @@ window.onload = function(){
             this.posY++;
         }
         
-        getNextAlignment(currentAlignment = this.alignment) {        // cold rotation,
+        getNextAlignment(currentAlignment = this.alignment) {
             if (currentAlignment < 3) return ++currentAlignment;
             else return 0;
         }
@@ -288,8 +273,7 @@ window.onload = function(){
 
     class Map{
         board = [];
-        topology;
-        possibleMinoPositions;         // array can only be run through by: for(col in/of posPos), because index starts at -2, not 0!
+        possibleTetrominoPositions;         // array can only be run through by: for(col in/of posPos), because index starts at -2, not 0!
 
         constructor() {            // create empty map at the size of the board
             for (let i = 0; i < config.minosW; i++) {
@@ -320,13 +304,13 @@ window.onload = function(){
                 if(counter===0) lines.push(row);
             }
             if(lines.length > 0){
-                for(let row of lines) this.removeRow(row);                            // Remove those Rows!
-                super.updateScore(config.scoring.rows[lines.length-1] * (super.level+1)); // update score
+                for(let row of lines) this.removeRow(row);      // Remove those Rows!
+                game.updateScore(config.scoring.rows[lines.length-1] * (game.level+1));   // update score
             }
 
         }
 
-        mapTetromino(tetrominoToMap = super.currentTetromino){
+        mapTetromino(tetrominoToMap = game.currentTetromino){
             console.log('mapping this of color: ' + tetrominoToMap.color);
             for (let x in tetrominoToMap.minos[tetrominoToMap.rotation]) {
                 let y = tetrominoToMap.minos[tetrominoToMap.rotation][x];
@@ -340,23 +324,11 @@ window.onload = function(){
                     }
                 }
             }
-            // store new topology
-            this.topology = [];
-            for (let colum of this.board) {
-                this.topology.push(this.scanTopo(colum));
-            }
-
-            // check:
-            console.log('Board:');
-            console.log(this.board);
-            console.log('Topology:');
-            console.log(this.topology);
-            //
         }
 
-        minoCollisionTest(xPos=this.currentTetromino.posX, yPos=this.currentTetromino.posY, rotation=this.currentTetromino.rotation){
-            for (let x=0; x<this.currentTetromino.minos[rotation]; x++) {
-                let y = this.currentTetromino.minos[rotation][x];
+        minoCollisionTest(xPos = game.currentTetromino.posX, yPos = game.currentTetromino.posY, rotation = game.currentTetromino.rotation, tetromino = game.currentTetromino){
+            for (let x=0; x<tetromino.minos[rotation]; x++) {
+                let y = tetromino.minos[rotation][x];
                 if (Array.isArray(y)){
                     for (let i of y) {
                         if(this.map[xPos + x][yPos + y[i]]) return true;
@@ -370,61 +342,63 @@ window.onload = function(){
             return false;
         }
 
-        wallCollisionTest(xPos=this.currentTetromino.posX, rotation=this.currentTetromino.rotation){
-            for (let x in this.currentTetromino.minos[rotation]){
-                let y = this.currentTetromino.minos[rotation][x];
+        wallCollisionTest(xPos = game.currentTetromino.posX, rotation = game.currentTetromino.rotation, tetromino = game.currentTetromino){
+            for (let x in tetromino.minos[rotation]){
+                let y = tetromino.minos[rotation][x];
                 if (Array.isArray(y) || y > -1){
-                    if (xPos < 0 || xPos > config.minosW) return true;
+                    return (xPos < 0 || xPos > config.minosW);
                 }
             }
             return false;
         }
 
-        bottomCollisionTest(yPos=this.currentTetromino.posY, rotation=this.currentTetromino.rotation){
+        bottomCollisionTest(yPos = game.currentTetromino.posY, rotation = game.currentTetromino.rotation){
             // determine bottom of Tetromino:
             let minoBottom = 0;
-            for (let x in this.currentTetromino.minos[rotation]){
-                let y = this.currentTetromino.minos[rotation][x];
+            for (let x in game.currentTetromino.minos[rotation]){
+                let y = game.currentTetromino.minos[rotation][x];
                 if (Array.isArray(y)) if (y[y.length-1] > minoBottom) minoBottom = y[y.length-1];
                 else if (y > minoBottom) minoBottom = y;
             }
             // check if Tetromino has reached bottom of the board:
-
-            if (yPos+minoBottom > this.map.board[0].length-1){
-                console.log('bottom-collision!');
-                return true;
-            } else return false;
-        }
-        
-        scanTopo(colum){
-            //console.dir(colum);
-            for (let row in colum) {
-                if(colum[row]) return row-1;
-            }
-            return config.minosH-1;
+            return (yPos+minoBottom > this.board[0].length-1);
         }
 
-        // todo: transfered game -> map
-        calculatePossiblePositions(tetromino, rowOffset=0){
-            let rowNum = tetromino.posY + rowOffset;
-            this.possibleMinoPositions = [];
-            for(let colum = Math.round(config.tetromino.maxSize / 2) * -1; colum < config.minosW+Math.round(config.tetromino.maxSize / 2); colum++){
-                this.possibleMinoPositions[colum] = [];
-                for(let rotation = 0; rotation < 4; rotation++){
-                    this.possibleMinoPositions[colum][rotation] = true;
-                    // are there minos?
-                    this.possibleMinoPositions[colum][rotation] = !this.minoCollisionTest(colum, rowNum, rotation);  // when collision detected (true), position occupied => false
-                    // are there walls?
-                    if(this.possibleMinoPositions[colum][rotation]) this.possibleMinoPositions[colum][rotation] = !this.wallCollisionTest(colum, rotation);
-                    // has the bottom been reached? (just testing when in close distance to the bottom)
-                    if(this.possibleMinoPositions[colum][rotation] && rowNum > config.minosW-config.tetromino.maxSize) this.possibleMinoPositions[colum][rotation] = this.bottomCollisionTest(rowNum, rotation);
+        wallkickTest(tetromino = game.currentTetromino, columOffset = 0){
+            let testoffset;
+            for(let i = 1; i <= 2; i++)
+                if(columOffset > 0) testoffset = i * -1;  // if intended movement of the tetromino is right, the testoffset has to be to the left (negative)
+                else testoffset = i;
+            if(!this.wallCollisionTest(tetromino.posX-testoffset, tetromino.alignment)) {
+                if (!this.minoCollisionTest(tetromino.posX, tetromino.posY, tetromino.alignment)){
+
+                    return false;
                 }
             }
-            console.log('possible positions for currentTetromino:');
-            console.log(this.possibleMinoPositions);
         }
 
+        calculatePossiblePositions(tetromino = game.currentTetromino, rowOffset=0){
+            let rowNum = tetromino.posY + rowOffset;
+            this.possibleTetrominoPositions = [];
+            for(let colum = Math.round(config.tetromino.maxSize / 2) * -1; colum < config.minosW+Math.round(config.tetromino.maxSize / 2); colum++){
+                this.possibleTetrominoPositions[colum] = [];
+                for(let rotation = 0; rotation < 4; rotation++){
+                    this.possibleTetrominoPositions[colum][rotation] = true;
+                    // are there minos?
+                    this.possibleTetrominoPositions[colum][rotation] = !this.minoCollisionTest(colum, rowNum, rotation);  // when collision detected (true), position occupied => false
+                    // are there walls?
+                    if(this.possibleTetrominoPositions[colum][rotation]) this.possibleTetrominoPositions[colum][rotation] = !this.wallCollisionTest(colum, rotation);
+                    // has the bottom been reached? (just testing when in close distance to the bottom)
+                    if(this.possibleTetrominoPositions[colum][rotation] && rowNum > config.minosW-config.tetromino.maxSize) this.possibleTetrominoPositions[colum][rotation] = this.bottomCollisionTest(rowNum, rotation);
+                }
+            }
+            //console.log('possible positions for currentTetromino:');
+            //console.log(this.possibleMinoPositions);
+        }
 
+        checkPossiblePosition(colum, alignment){
+            return this.possibleTetrominoPositions[colum][alignment];
+        }
     }
 
     class Draw{
@@ -440,8 +414,8 @@ window.onload = function(){
             ctx.strokeRect(startX, startY + offsetY, config.mino.minoSizeW, config.mino.minoSizeH);
         }
 
-        tetromino(tetromino = super.currentTetromino){
-            console.log('drawing tetromino of color: ' + tetromino.color + '  at x: ' + tetromino.posX + '  and y: ' + tetromino.posY + '  with y-Offset: ' + tetromino.offsetY);
+        tetromino(tetromino = game.currentTetromino){
+            //console.log('drawing tetromino of color: ' + tetromino.color + '  at x: ' + tetromino.posX + '  and y: ' + tetromino.posY + '  with y-Offset: ' + tetromino.offsetY);
             for (let x in tetromino.minos[tetromino.alignment]) {
                 let y = tetromino.minos[tetromino.alignment][x];
                 if (Array.isArray(y)){
@@ -458,23 +432,23 @@ window.onload = function(){
             }
         }
 
-        previewTetromino(tetromino = super.nextTetromino){
-            tetromino.alignment = 1;
-            tetromino.posX = config.minosW;
-            tetromino.posY = Math.floor(config.minosH/4);
-            console.log('previewing tetromino:');
-            this.tetromino(tetromino);
+        previewTetromino(tetrominoToPreview = game.nextTetromino){
+            tetrominoToPreview.alignment = 1;
+            tetrominoToPreview.posX = config.minosW;
+            tetrominoToPreview.posY = Math.floor(config.minosH/4);
+            //console.log('previewing tetromino:');
+            this.tetromino(tetrominoToPreview);
         }
 
-        map(map = super.map){
+        map(map = game.map){
             for(let colum in map){
                 for(let row in map[colum]){
-                    if(map[colum][row]) this.drawMino(colum, row, map[colum][row]);
+                    if(map[colum][row]) game.draw.mino(colum, row, map[colum][row]);
                 }
             }
         }
 
-        ui(){
+        ui(score, level, tetrominoToPreview){
             // line:
             ctx.beginPath();
             ctx.moveTo(config.boardW+config.ui.lineWidth, 0);
@@ -490,10 +464,10 @@ window.onload = function(){
             ctx.fillText('Level:', config.boardW +config.ui.lineWidth + 10, 50);
             ctx.fillText('Next:', config.boardW + config.ui.lineWidth + 10, 130);
             ctx.textAlign = 'end';
-            ctx.fillText(this.score, config.boardW+190, 10);
-            ctx.fillText(this.level, config.boardW+190, 50);
+            ctx.fillText(score, config.boardW+190, 10);
+            ctx.fillText(level, config.boardW+190, 50);
             // next Tetromino:
-            this.previewTetromino(super.nextTetromino);
+            this.previewTetromino(tetrominoToPreview);
         }
 
         clearCanvas(){
@@ -506,12 +480,12 @@ window.onload = function(){
             console.log("board cleared");
         }
 
-        clearTetromino(tetromino = super.currentTetromino){
-            console.log('undrawing tetromino');
-            for (let x in tetromino.minos[this.rotation]) {
-                let y = tetromino.minos[this.rotation][x];
-                if (Array.isArray(y)) ctx.clearRect(this.posX + parseInt(x), this.posY + this.offsetY + y[0] * config.mino.minoSizeH, config.mino.minoSizeW, config.mino.minoSizeH * x.length-1);
-                else if (y > -1) ctx.clearRect(this.posX + parseInt(x), this.posY + this.offsetY, config.mino.minoSizeW, config.mino.minoSizeW * x);
+        clearTetromino(tetromino = game.currentTetromino){
+            console.log('tetromino cleared');
+            for (let x in tetromino.minos[tetromino.alignment]) {
+                let y = tetromino.minos[tetromino.alignment][x];
+                if (Array.isArray(y)) ctx.clearRect(tetromino.posX + parseInt(x), tetromino.posY + tetromino.offsetY + y[0] * config.mino.minoSizeH, config.mino.minoSizeW, config.mino.minoSizeH * x.length-1);
+                else if (y > -1) ctx.clearRect(tetromino.posX + parseInt(x), tetromino.posY + tetromino.offsetY, config.mino.minoSizeW, config.mino.minoSizeW * x);
             }
         }
     }
@@ -527,17 +501,17 @@ window.onload = function(){
 
                 case 38:        // /\
                 case 87:        // W - rotate
-                    if (!game.testCollision(0, 0, true)) game.currentTetromino.rotation = game.rotate(game.currentTetromino.rotation);
+                    if (!game.map.checkPossiblePosition()) game.currentTetromino.rotate();
                     break;
 
                 case 37:        // <
                 case 65:        // A - move left
-                    if (!game.testCollision(-1)) game.currentTetromino.posX--;
+                    if (!game.testCollision(-1)) game.currentTetromino.moveLeft();
                     break;
 
                 case 39:        // >
                 case 68:        // D - move right
-                    if (!game.testCollision(1)) game.currentTetromino.posX++;
+                    if (!game.testCollision(1)) game.currentTetromino.moveRight();
                     break;
 
                 case 40:        // \/
@@ -556,12 +530,10 @@ window.onload = function(){
             }
         }
     }
-    
+
     // todo: z.B. button mit onclick erzeugt:
     let game = new Game();
 //    if(confirm('Start a new Game?')) {
         game.run();
 //    }
-
-
 }
