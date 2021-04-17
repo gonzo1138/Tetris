@@ -15,32 +15,309 @@ window.onload = function(){
                 'I':{
                     minoPositions: [[1,1,1,1],[-1,-1,[0,1,2,3],-1],[2,2,2,2],[-1,[0,1,2,3],-1,-1]], // [[Alignment0][Alignment1][Alignment2][Alignment3]]
                     color:'#03EFF1',
+                    alignment:{
+                        0:{
+                            minos:{
+                                0:0,
+                                1:0,
+                                2:0,
+                                3:0
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        1:{
+                            minos:{
+                                0:[0,1,2,3]
+                            },
+                            offsetX:2,
+                            offsetY:0
+                        },
+                        2:{
+                            minos:{
+                                0:0,
+                                1:0,
+                                2:0,
+                                3:0
+                            },
+                            offsetX:0,
+                            offsetY:2
+                        },
+                        3:{
+                            minos:{
+                                0:[0,1,2,3]
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                    }
                 },
                 'O':{
                     minoPositions: [[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]]],
                     color:'#EFF200',
+                    alignment:{
+                        0:{
+                            minos:{
+                                0:[0,1],
+                                1:[0,1],
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        1:{
+                            minos:{
+                                0:[0,1],
+                                1:[0,1],
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        2:{
+                            minos:{
+                                0:[0,1],
+                                1:[0,1],
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        3:{
+                            minos:{
+                                0:[0,1],
+                                1:[0,1],
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                    }
+                    }
                 },
                 'T':{
                     minoPositions: [[1,[0,1],1],[-1,[0,1,2],1],[1,[1,2],1],[1,[0,1,2],-1]],
                     color:'#A000F5',
+                    alignment:{
+                        0:{
+                            minos:{
+                                0:1,
+                                1:[0,1],
+                                2:1,
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        },
+                        1:{
+                            minos:{
+                                0:[0,1,2],
+                                1:1,
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        2:{
+                            minos:{
+                                0:0,
+                                1:[0,1],
+                                2:0,
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        3:{
+                            minos:{
+                                0:1,
+                                1:[0,1,2],
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        }
+                    }
                 },
                 'S':{
                     minoPositions: [[1,[0,1],0],[-1,[0,1],[1,2]],[2,[1,2],1],[[0,1],[1,2],-1]],
                     color:'#00F100',
+                    alignment:{
+                        0:{
+                            minos:{
+                                0:1,
+                                1:[0,1],
+                                2:0,
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        },
+                        1:{
+                            minos:{
+                                0:[0,1],
+                                1:[1,2],
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        2:{
+                            minos:{
+                                0:1,
+                                1:[0,1],
+                                2:0,
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        3:{
+                            minos:{
+                                0:[0,1],
+                                1:[1,2],
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        }
+                    }
                 },
                 'Z':{
                     minoPositions: [[0,[0,1],1],[-1,[1,2],[0,1]],[1,[1,2],2],[[1,2],0,1],-1],
                     color:'#F00100',
+                    alignment:{
+                        0:{
+                            minos:{
+                                0:0,
+                                1:[0,1],
+                                2:1,
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        },
+                        1:{
+                            minos:{
+                                0:[1,2],
+                                1:[0,1],
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        2:{
+                            minos:{
+                                0:0,
+                                1:[0,1],
+                                2:1,
+                            },
+                            offsetX:1,
+                            offsetY:0
+                        },
+                        3:{
+                            minos:{
+                                0:[1,2],
+                                1:[0,1],
+                            },
+                            offsetX:0,
+                            offsetY:0
+                        }
+                    }
                 },
                 'J':{
                     minoPositions: [[[0,1],1,1],[-1,[0,1,2],0],[1,1,[1,2]],[2,[0,1,2],-1]],
                     color:'#0101EE',
+                    alignment:{
+                        0:{
+                            minoPositions:{
+                                0:0,
+                                1:0,
+                                2:0,
+                                3:0
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        1:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+
+                        },
+                        2:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+
+                        },
+                        3:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+                        }
+                    }
                 },
                 'L':{
                     minoPositions: [[1,1,[0,1]],[-1,[0,1,2],2],[[1,2],1,1],[0,[0,1,2],-1]],
                     color:'#EFA000',
+                    alignment:{
+                        0:{
+                            minoPositions:{
+                                0:0,
+                                1:0,
+                                2:0,
+                                3:0
+                            },
+                            offsetX:0,
+                            offsetY:1
+                        },
+                        1:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+
+                        },
+                        2:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+
+                        },
+                        3:{
+                            minoPositions:{
+
+                            },
+                            offsetX:{
+
+                            },
+                            offsetY:{
+
+                            }
+                        }
+                    }
                 },
             },
+            minospositions:{
+
+                },
+
             maxSize: 4,
         },
         scoring:{                                           // score for 1,2,3 or 4 rows at once  https://tetris.wiki/Scoring
