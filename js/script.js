@@ -12,313 +12,286 @@ window.onload = function(){
         },
         tetromino:{
             form: {       // forms: https://tetris.wiki/Tetromino
-                'I':{
-                    minoPositions: [[1,1,1,1],[-1,-1,[0,1,2,3],-1],[2,2,2,2],[-1,[0,1,2,3],-1,-1]], // [[Alignment0][Alignment1][Alignment2][Alignment3]]
-                    color:'#03EFF1',
-                    alignment:{
-                        0:{
-                            minos:{
-                                0:0,
-                                1:0,
-                                2:0,
-                                3:0
+                'I': {
+                    minoPositions: [[1, 1, 1, 1], [-1, -1, [0, 1, 2, 3], -1], [2, 2, 2, 2], [-1, [0, 1, 2, 3], -1, -1]], // [[Alignment0][Alignment1][Alignment2][Alignment3]]
+                    color: '#03EFF1',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: 0,
+                                1: 0,
+                                2: 0,
+                                3: 0
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        1:{
-                            minos:{
-                                0:[0,1,2,3]
+                        1: {
+                            minos: {
+                                0: [0, 1, 2, 3]
                             },
-                            offsetX:2,
-                            offsetY:0
+                            offsetX: 2,
+                            offsetY: 0
                         },
-                        2:{
-                            minos:{
-                                0:0,
-                                1:0,
-                                2:0,
-                                3:0
+                        2: {
+                            minos: {
+                                0: 0,
+                                1: 0,
+                                2: 0,
+                                3: 0
                             },
-                            offsetX:0,
-                            offsetY:2
+                            offsetX: 0,
+                            offsetY: 2
                         },
-                        3:{
-                            minos:{
-                                0:[0,1,2,3]
+                        3: {
+                            minos: {
+                                0: [0, 1, 2, 3]
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
                     }
                 },
-                'O':{
-                    minoPositions: [[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]],[-1,[0,1],[0,1]]],
-                    color:'#EFF200',
-                    alignment:{
-                        0:{
-                            minos:{
-                                0:[0,1],
-                                1:[0,1],
+                'O': {
+                    minoPositions: [[-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]]],
+                    color: '#EFF200',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: [0, 1],
+                                1: [0, 1],
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        1:{
-                            minos:{
-                                0:[0,1],
-                                1:[0,1],
+                        1: {
+                            minos: {
+                                0: [0, 1],
+                                1: [0, 1],
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        2:{
-                            minos:{
-                                0:[0,1],
-                                1:[0,1],
+                        2: {
+                            minos: {
+                                0: [0, 1],
+                                1: [0, 1],
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        3:{
-                            minos:{
-                                0:[0,1],
-                                1:[0,1],
+                        3: {
+                            minos: {
+                                0: [0, 1],
+                                1: [0, 1],
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                    }
                     }
                 },
-                'T':{
-                    minoPositions: [[1,[0,1],1],[-1,[0,1,2],1],[1,[1,2],1],[1,[0,1,2],-1]],
-                    color:'#A000F5',
-                    alignment:{
-                        0:{
-                            minos:{
-                                0:1,
-                                1:[0,1],
-                                2:1,
+                'T': {
+                    minoPositions: [[1, [0, 1], 1], [-1, [0, 1, 2], 1], [1, [1, 2], 1], [1, [0, 1, 2], -1]],
+                    color: '#A000F5',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: 1,
+                                1: [0, 1],
+                                2: 1,
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         },
-                        1:{
-                            minos:{
-                                0:[0,1,2],
-                                1:1,
+                        1: {
+                            minos: {
+                                0: [0, 1, 2],
+                                1: 1,
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        2:{
-                            minos:{
-                                0:0,
-                                1:[0,1],
-                                2:0,
+                        2: {
+                            minos: {
+                                0: 0,
+                                1: [0, 1],
+                                2: 0,
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        3:{
-                            minos:{
-                                0:1,
-                                1:[0,1,2],
+                        3: {
+                            minos: {
+                                0: 1,
+                                1: [0, 1, 2],
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         }
                     }
                 },
-                'S':{
-                    minoPositions: [[1,[0,1],0],[-1,[0,1],[1,2]],[2,[1,2],1],[[0,1],[1,2],-1]],
-                    color:'#00F100',
-                    alignment:{
-                        0:{
-                            minos:{
-                                0:1,
-                                1:[0,1],
-                                2:0,
+                'S': {
+                    minoPositions: [[1, [0, 1], 0], [-1, [0, 1], [1, 2]], [2, [1, 2], 1], [[0, 1], [1, 2], -1]],
+                    color: '#00F100',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: 1,
+                                1: [0, 1],
+                                2: 0,
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         },
-                        1:{
-                            minos:{
-                                0:[0,1],
-                                1:[1,2],
+                        1: {
+                            minos: {
+                                0: [0, 1],
+                                1: [1, 2],
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        2:{
-                            minos:{
-                                0:1,
-                                1:[0,1],
-                                2:0,
+                        2: {
+                            minos: {
+                                0: 1,
+                                1: [0, 1],
+                                2: 0,
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        3:{
-                            minos:{
-                                0:[0,1],
-                                1:[1,2],
+                        3: {
+                            minos: {
+                                0: [0, 1],
+                                1: [1, 2],
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         }
                     }
                 },
-                'Z':{
-                    minoPositions: [[0,[0,1],1],[-1,[1,2],[0,1]],[1,[1,2],2],[[1,2],0,1],-1],
-                    color:'#F00100',
-                    alignment:{
-                        0:{
-                            minos:{
-                                0:0,
-                                1:[0,1],
-                                2:1,
+                'Z': {
+                    minoPositions: [[0, [0, 1], 1], [-1, [1, 2], [0, 1]], [1, [1, 2], 2], [[1, 2], 0, 1], -1],
+                    color: '#F00100',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: 0,
+                                1: [0, 1],
+                                2: 1,
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         },
-                        1:{
-                            minos:{
-                                0:[1,2],
-                                1:[0,1],
+                        1: {
+                            minos: {
+                                0: [1, 2],
+                                1: [0, 1],
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        2:{
-                            minos:{
-                                0:0,
-                                1:[0,1],
-                                2:1,
+                        2: {
+                            minos: {
+                                0: 0,
+                                1: [0, 1],
+                                2: 1,
                             },
-                            offsetX:1,
-                            offsetY:0
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        3:{
-                            minos:{
-                                0:[1,2],
-                                1:[0,1],
+                        3: {
+                            minos: {
+                                0: [1, 2],
+                                1: [0, 1],
                             },
-                            offsetX:0,
-                            offsetY:0
+                            offsetX: 0,
+                            offsetY: 0
                         }
                     }
                 },
-                'J':{
-                    minoPositions: [[[0,1],1,1],[-1,[0,1,2],0],[1,1,[1,2]],[2,[0,1,2],-1]],
-                    color:'#0101EE',
-                    alignment:{
-                        0:{
-                            minoPositions:{
-                                0:0,
-                                1:0,
-                                2:0,
-                                3:0
+                'J': {
+                    minoPositions: [[[0, 1], 1, 1], [-1, [0, 1, 2], 0], [1, 1, [1, 2]], [2, [0, 1, 2], -1]],
+                    color: '#0101EE',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: [0, 1],
+                                1: 1,
+                                2: 1,
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 0
                         },
-                        1:{
-                            minoPositions:{
-
+                        1: {
+                            minos: {
+                                0: [0, 1, 2],
+                                1: 0,
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
-
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        2:{
-                            minoPositions:{
-
+                        2: {
+                            minos: {
+                                0: 0,
+                                1: 0,
+                                2: [0, 1],
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
-
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        3:{
-                            minoPositions:{
-
+                        3: {
+                            minos: {
+                                0: 2,
+                                1: [0, 1, 2],
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
+                            offsetX: 0,
+                            offsetY: 0
                         }
                     }
                 },
-                'L':{
-                    minoPositions: [[1,1,[0,1]],[-1,[0,1,2],2],[[1,2],1,1],[0,[0,1,2],-1]],
-                    color:'#EFA000',
-                    alignment:{
-                        0:{
-                            minoPositions:{
-                                0:0,
-                                1:0,
-                                2:0,
-                                3:0
+                'L': {
+                    minoPositions: [[1, 1, [0, 1]], [-1, [0, 1, 2], 2], [[1, 2], 1, 1], [0, [0, 1, 2], -1]],
+                    color: '#EFA000',
+                    alignment: {
+                        0: {
+                            minos: {
+                                0: 1,
+                                1: 1,
+                                2: [0, 1],
                             },
-                            offsetX:0,
-                            offsetY:1
+                            offsetX: 0,
+                            offsetY: 0
                         },
-                        1:{
-                            minoPositions:{
-
+                        1: {
+                            minos: {
+                                0: [0, 1, 2],
+                                1: 2,
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
-
+                            offsetX: 1,
+                            offsetY: 0
                         },
-                        2:{
-                            minoPositions:{
-
+                        2: {
+                            minos: {
+                                0: [0, 1],
+                                1: 0,
+                                2: 0,
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
-
+                            offsetX: 0,
+                            offsetY: 1
                         },
-                        3:{
-                            minoPositions:{
-
+                        3: {
+                            minos: {
+                                0: 0,
+                                1: [0, 1, 2],
                             },
-                            offsetX:{
-
-                            },
-                            offsetY:{
-
-                            }
+                            offsetX: 0,
+                            offsetY: 0
                         }
-                    }
+                    },
                 },
+                maxSize: 4,
             },
-            minospositions:{
-
-                },
-
-            maxSize: 4,
         },
         scoring:{                                           // score for 1,2,3 or 4 rows at once  https://tetris.wiki/Scoring
             rows:{
@@ -331,10 +304,10 @@ window.onload = function(){
         },
         minosH: 16,
         minosW: 10,
-        boardH: 800,   // 800 bei 16 Reihen: 50px
-        boardW: 500,   // 500 bei 10 Spalten: 50px
-        startingColum: 0,   // gets calculated...
-        speed: 600,    // ms to pass one row (smaller = faster) at level 0
+        boardH: 800,        // 800 bei 16 Reihen: 50px
+        boardW: 500,        // 500 bei 10 Spalten: 50px
+        startingcolumn: 0,   // gets calculated...
+        speed: 600,         // ms to pass one row (smaller = faster) at level 0
         ui:{
             lineWidth: 5,
             lineColor: '#fff',
@@ -371,10 +344,10 @@ window.onload = function(){
 
             config.mino.minoSizeH = config.boardH / config.minosH;
             config.mino.minoSizeW = config.boardW / config.minosW;
-            config.startingColum = Math.floor(config.minosW/2)-1;
+            config.startingcolumn = Math.floor(config.minosW/2)-1;
             this.frameDuration = config.speed / config.minoSizeH;
             console.log(config.speed);
-            if(config.startingColum < 3) window.alert("Check your board-size-settings...");
+            if(config.startingcolumn < 3) window.alert("Check your board-size-settings...");
         }
 
         run(){
@@ -391,7 +364,7 @@ window.onload = function(){
             this.draw.ui(this.score, this.level, this.nextTetromino);
             // place new currentTetromino:
             this.currentTetromino.rotation = 0;
-            this.currentTetromino.posX = config.startingColum;
+            this.currentTetromino.posX = config.startingcolumn;
             this.currentTetromino.posY = 2//-2;
             this.transit();
         }
@@ -440,16 +413,16 @@ window.onload = function(){
             this.map.scanForLines();
         }
 
-        checkCollision(columOffset=0, rowOffset=0, rotation=false){     // checks in map of precalculated possible positions, works only in current row!
-            let xPosition = this.currentTetromino.posX + columOffset;
+        checkCollision(columnOffset=0, rowOffset=0, rotation=false){     // checks in map of precalculated possible positions, works only in current row!
+            let xPosition = this.currentTetromino.posX + columnOffset;
             let testRotation = this.currentTetromino.getAlignment();
             if(rotation) testRotation = this.currentTetromino.getNextAlignment();
             console.log(this.map.possibleTetrominoPositions);
             return this.map.checkPossiblePosition(xPosition, testRotation);
         }
 
-        testCollision(columOffset=0, rowOffset=0, rotation=false){
-            let xPosition = this.currentTetromino.posX + columOffset;
+        testCollision(columnOffset=0, rowOffset=0, rotation=false){
+            let xPosition = this.currentTetromino.posX + columnOffset;
             let yPosition = this.currentTetromino.posY + rowOffset;
             let testRotation = this.currentTetromino.getAlignment();
             if(rotation) testRotation = this.currentTetromino.getNextAlignment();
@@ -457,7 +430,7 @@ window.onload = function(){
             // test 1: with new rotation and offsets - are there walls?
             if(this.map.wallCollisionTest(xPosition, testRotation)) {
                 // if so, can a wallkick be performed? -> are *there* minos?      https://tetris.wiki/Wall_kick
-                return !this.map.wallkickTest(this.currentTetromino, columOffset);
+                return !this.map.wallkickTest(this.currentTetromino, columnOffset);
             }
 
             // test 2: xOffset with new rotation and offsets - are there minos?
@@ -509,19 +482,26 @@ window.onload = function(){
     }
 
     class Tetromino{
-        minos;
-        color;
+        form;
         posX = 0;
         posY = 0;
         offsetY = 0;
         alignment = 0;   // alignments: https://tetris.wiki/Super_Rotation_System
 
+        // deprecated:
+        color;
+        minos;
+
         constructor(form){
+            this.form = form;
+            
+            // deprecated:
             this.color = config.tetromino.form[form].color;
             this.minos = config.tetromino.form[form].minoPositions;
         }
 
         rotate() {
+            // check collision here...
             if (this.alignment < 3) this.alignment++;
             else this.alignment = 0;
         }
@@ -531,19 +511,22 @@ window.onload = function(){
         }
         
         moveRight(){
+            // check collision here...
             this.posX++;
         }
 
         moveLeft(){
+            // check collision here...
             this.posX--;
         }
         
         moveDown(){
+            // check collision here...
             this.posY++;
         }
         
         getNextAlignment(currentAlignment = this.alignment) {
-            if (currentAlignment < 3) return ++currentAlignment;
+            if (currentAlignment < 3) return currentAlignment+1;
             else return 0;
         }
     }
@@ -575,8 +558,8 @@ window.onload = function(){
             let lines = [];          // storage for row numbers that are lines
             for(let row = 0; row < config.minosH; row++){
                 let counter = config.minosW;
-                for(let colum = 0; colum < config.minosW; colum++){
-                    if (this.board[colum][row]) counter--;
+                for(let column = 0; column < config.minosW; column++){
+                    if (this.board[column][row]) counter--;
                 }
                 if(counter===0) lines.push(row);
             }
@@ -641,10 +624,10 @@ window.onload = function(){
             return (yPos+minoBottom > this.board[0].length-1);
         }
 
-        wallkickTest(tetromino = game.currentTetromino, columOffset = 0){
+        wallkickTest(tetromino = game.currentTetromino, columnOffset = 0){
             let testoffset;
             for(let i = 1; i <= 2; i++)
-                if(columOffset > 0) testoffset = i * -1;  // if intended movement of the tetromino is right, the testoffset has to be to the left (negative)
+                if(columnOffset > 0) testoffset = i * -1;  // if intended movement of the tetromino is right, the testoffset has to be to the left (negative)
                 else testoffset = i;
             if(!this.wallCollisionTest(tetromino.posX-testoffset, tetromino.alignment)) {
                 if (!this.minoCollisionTest(tetromino.posX, tetromino.posY, tetromino.alignment)){
@@ -657,24 +640,24 @@ window.onload = function(){
         calculatePossiblePositions(tetromino = game.currentTetromino, rowOffset=0){
             let rowNum = tetromino.posY + rowOffset;
             this.possibleTetrominoPositions = [];
-            for(let colum = Math.round(config.tetromino.maxSize / 2) * -1; colum < config.minosW+Math.round(config.tetromino.maxSize / 2); colum++){
-                this.possibleTetrominoPositions[colum] = [];
+            for(let column = Math.round(config.tetromino.maxSize / 2) * -1; column < config.minosW+Math.round(config.tetromino.maxSize / 2); column++){
+                this.possibleTetrominoPositions[column] = [];
                 for(let rotation = 0; rotation < 4; rotation++){
-                    this.possibleTetrominoPositions[colum][rotation] = true;
+                    this.possibleTetrominoPositions[column][rotation] = true;
                     // are there minos?
-                    this.possibleTetrominoPositions[colum][rotation] = !this.minoCollisionTest(colum, rowNum, rotation);  // when collision detected (true), position occupied => false
+                    this.possibleTetrominoPositions[column][rotation] = !this.minoCollisionTest(column, rowNum, rotation);  // when collision detected (true), position occupied => false
                     // are there walls?
-                    if(this.possibleTetrominoPositions[colum][rotation]) this.possibleTetrominoPositions[colum][rotation] = !this.wallCollisionTest(colum, rotation);
+                    if(this.possibleTetrominoPositions[column][rotation]) this.possibleTetrominoPositions[column][rotation] = !this.wallCollisionTest(column, rotation);
                     // has the bottom been reached? (just testing when in close distance to the bottom)
-                    if(this.possibleTetrominoPositions[colum][rotation] && rowNum > config.minosW-config.tetromino.maxSize) this.possibleTetrominoPositions[colum][rotation] = this.bottomCollisionTest(rowNum, rotation);
+                    if(this.possibleTetrominoPositions[column][rotation] && rowNum > config.minosW-config.tetromino.maxSize) this.possibleTetrominoPositions[column][rotation] = this.bottomCollisionTest(rowNum, rotation);
                 }
             }
             //console.log('possible positions for currentTetromino:');
             //console.log(this.possibleMinoPositions);
         }
 
-        checkPossiblePosition(colum, alignment){
-            return this.possibleTetrominoPositions[colum][alignment];
+        checkPossiblePosition(column, alignment){
+            return this.possibleTetrominoPositions[column][alignment];
         }
     }
 
@@ -691,6 +674,26 @@ window.onload = function(){
             ctx.strokeRect(startX, startY + offsetY, config.mino.minoSizeW, config.mino.minoSizeH);
         }
 
+        tetromino_new(tetromino = game.currentTetromino){
+            //console.log('drawing tetromino of color: ' + tetromino.color + '  at x: ' + tetromino.posX + '  and y: ' + tetromino.posY + '  with y-Offset: ' + tetromino.offsetY);
+            for (let x in config.tetromino.form[tetromino.form].alignment[tetromino.alignment].minos.length) {
+                let y = config.tetromino.form[tetromino.form].alignment[tetromino.alignment].minos[x];
+                if (Array.isArray(y)){
+                    // draw all minos of that column
+                    for (let i of y) {
+                        this.mino((tetromino.posX + parseInt(x)), tetromino.posY + i, config.tetromino.form[tetromino.form].alignment[tetromino.alignment].color, tetromino.offsetY);
+                        //console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+i));
+                    }
+                } else {
+                    // draw the mino in that column
+                    if (y > -1){
+                        this.mino(tetromino.posX + parseInt(x), tetromino.posY + y, config.tetromino.form[tetromino.form].alignment[tetromino.alignment].color, tetromino.offsetY);
+                        //console.log('mino drawn at x: ' + (tetromino.posX+x) + ' and y: ' + (tetromino.posX+y));
+                    }
+                }
+            }
+        }
+        
         tetromino(tetromino = game.currentTetromino){
             //console.log('drawing tetromino of color: ' + tetromino.color + '  at x: ' + tetromino.posX + '  and y: ' + tetromino.posY + '  with y-Offset: ' + tetromino.offsetY);
             for (let x in tetromino.minos[tetromino.alignment]) {
@@ -718,9 +721,9 @@ window.onload = function(){
         }
 
         map(map = game.map){
-            for(let colum in map){
-                for(let row in map[colum]){
-                    if(map[colum][row]) game.draw.mino(colum, row, map[colum][row]);
+            for(let column in map){
+                for(let row in map[column]){
+                    if(map[column][row]) game.draw.mino(column, row, map[column][row]);
                 }
             }
         }
