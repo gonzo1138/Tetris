@@ -15,6 +15,7 @@ window.onload = function(){
                 'I': {
                     minoPositions: [[1, 1, 1, 1], [-1, -1, [0, 1, 2, 3], -1], [2, 2, 2, 2], [-1, [0, 1, 2, 3], -1, -1]], // [[Alignment0][Alignment1][Alignment2][Alignment3]]
                     color: '#03EFF1',
+                    wallkickoffsetMax:2,
                     alignment: {
                         0: {
                             minos: {
@@ -24,7 +25,57 @@ window.onload = function(){
                                 3: 0
                             },
                             offsetX: 0,
-                            offsetY: 1
+                            offsetY: 1,
+                            /*wallkick:{
+                                0:{
+                                    1:{
+                                        left:1,
+                                        right:-2,
+                                        bottom:0
+                                    },
+                                    2:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    }
+                                },
+                                1:{
+                                    1:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    },
+                                    2:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    }
+                                },
+                                2:{
+                                    1:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    },
+                                    2:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    }
+                                },
+                                3:{
+                                    1:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    },
+                                    2:{
+                                        left:,
+                                        right:,
+                                        bottom:
+                                    }
+                                }
+                                */
                         },
                         1: {
                             minos: {
@@ -50,11 +101,12 @@ window.onload = function(){
                             offsetX: 1,
                             offsetY: 0
                         },
-                    }
+                    },
                 },
                 'O': {
                     minoPositions: [[-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]], [-1, [0, 1], [0, 1]]],
                     color: '#EFF200',
+                    wallkickoffsetMax:0,
                     alignment: {
                         0: {
                             minos: {
@@ -93,6 +145,7 @@ window.onload = function(){
                 'T': {
                     minoPositions: [[1, [0, 1], 1], [-1, [0, 1, 2], 1], [1, [1, 2], 1], [1, [0, 1, 2], -1]],
                     color: '#A000F5',
+                    wallkickoffsetMax:1,
                     alignment: {
                         0: {
                             minos: {
@@ -133,6 +186,7 @@ window.onload = function(){
                 'S': {
                     minoPositions: [[1, [0, 1], 0], [-1, [0, 1], [1, 2]], [2, [1, 2], 1], [[0, 1], [1, 2], -1]],
                     color: '#00F100',
+                    wallkickoffsetMax:1,
                     alignment: {
                         0: {
                             minos: {
@@ -173,6 +227,7 @@ window.onload = function(){
                 'Z': {
                     minoPositions: [[0, [0, 1], 1], [-1, [1, 2], [0, 1]], [1, [1, 2], 2], [[1, 2], 0, 1], -1],
                     color: '#F00100',
+                    wallkickoffsetMax:1,
                     alignment: {
                         0: {
                             minos: {
@@ -213,6 +268,7 @@ window.onload = function(){
                 'J': {
                     minoPositions: [[[0, 1], 1, 1], [-1, [0, 1, 2], 0], [1, 1, [1, 2]], [2, [0, 1, 2], -1]],
                     color: '#0101EE',
+                    wallkickoffsetMax:1,
                     alignment: {
                         0: {
                             minos: {
@@ -253,6 +309,7 @@ window.onload = function(){
                 'L': {
                     minoPositions: [[1, 1, [0, 1]], [-1, [0, 1, 2], 2], [[1, 2], 1, 1], [0, [0, 1, 2], -1]],
                     color: '#EFA000',
+                    wallkickoffsetMax:1,
                     alignment: {
                         0: {
                             minos: {
@@ -350,7 +407,7 @@ window.onload = function(){
             if(config.startingcolumn < 3) window.alert("Check your board-size-settings...");
         }
 
-        run(){
+        start(){
             // todo: reset everything to start a new game after another without reloading the page?  alternative: new Game-Object...
             this.drop();
         }
@@ -387,8 +444,7 @@ window.onload = function(){
         }
 
         step() {
-            //if(!this.checkCollision(0, 1)){
-            this.map.calculatePossiblePositions(this.currentTetromino, 1);
+            this.map.calculatePossiblePositions(this.currentTetromino);
             if(this.map.checkPossiblePosition(this.currentTetromino.posX, this.currentTetromino.alignment)){
                 this.isFirstStepOfNewCycle = false;
                 this.currentTetromino.moveDown();
@@ -500,16 +556,6 @@ window.onload = function(){
             this.minos = config.tetromino.form[form].minoPositions;
         }
 
-        rotate() {
-            // check collision here...
-            if (this.alignment < 3) this.alignment++;
-            else this.alignment = 0;
-        }
-
-        getAlignment(){
-            return this.alignment;
-        }
-        
         moveRight(){
             // check collision here...
             this.posX++;
@@ -519,15 +565,25 @@ window.onload = function(){
             // check collision here...
             this.posX--;
         }
-        
+
         moveDown(){
             // check collision here...
             this.posY++;
         }
-        
+
+        getAlignment(){
+            return this.alignment;
+        }
+
         getNextAlignment(currentAlignment = this.alignment) {
             if (currentAlignment < 3) return currentAlignment+1;
             else return 0;
+        }
+
+        rotate() {
+            // check collision here...
+            if (this.alignment < 3) this.alignment++;
+            else this.alignment = 0;
         }
     }
 
@@ -637,27 +693,33 @@ window.onload = function(){
             }
         }
 
-        calculatePossiblePositions(tetromino = game.currentTetromino, rowOffset=0){
-            let rowNum = tetromino.posY + rowOffset;
-            this.possibleTetrominoPositions = [];
+        calculatePossiblePositionsInRow(form, row){
             for(let column = Math.round(config.tetromino.maxSize / 2) * -1; column < config.minosW+Math.round(config.tetromino.maxSize / 2); column++){
-                this.possibleTetrominoPositions[column] = [];
-                for(let rotation = 0; rotation < 4; rotation++){
-                    this.possibleTetrominoPositions[column][rotation] = true;
+                this.possibleTetrominoPositions[column][row] = [];
+                for(let alignment = 0; alignment < 4; alignment++){
+                    //this.possibleTetrominoPositions[column][alignment] = true;
                     // are there minos?
-                    this.possibleTetrominoPositions[column][rotation] = !this.minoCollisionTest(column, rowNum, rotation);  // when collision detected (true), position occupied => false
+                    this.possibleTetrominoPositions[column][alignment] = !this.minoCollisionTest(column, row, alignment);  // when collision is detected (true): position occupied => false
                     // are there walls?
-                    if(this.possibleTetrominoPositions[column][rotation]) this.possibleTetrominoPositions[column][rotation] = !this.wallCollisionTest(column, rotation);
+                    if(this.possibleTetrominoPositions[column][alignment]) this.possibleTetrominoPositions[column][alignment] = !this.wallCollisionTest(column, alignment);
                     // has the bottom been reached? (just testing when in close distance to the bottom)
-                    if(this.possibleTetrominoPositions[column][rotation] && rowNum > config.minosW-config.tetromino.maxSize) this.possibleTetrominoPositions[column][rotation] = this.bottomCollisionTest(rowNum, rotation);
+                    if(this.possibleTetrominoPositions[column][alignment] && row > config.minosW-config.tetromino.maxSize) this.possibleTetrominoPositions[column][alignment] = this.bottomCollisionTest(row, alignment);
                 }
             }
             //console.log('possible positions for currentTetromino:');
             //console.log(this.possibleMinoPositions);
         }
 
-        checkPossiblePosition(column, alignment){
-            return this.possibleTetrominoPositions[column][alignment];
+        calculatePossiblePositions(tetromino = game.currentTetromino){
+            this.possibleTetrominoPositions = [];
+            for(let row in config.minosH){
+                this.calculatePossiblePositionsInRow(tetromino.form, row);
+            }
+
+        }
+
+        checkPossiblePosition(column, row, alignment){
+            return this.possibleTetrominoPositions[column][row][alignment];
         }
     }
 
@@ -814,6 +876,6 @@ window.onload = function(){
     // todo: z.B. button mit onclick erzeugt:
     let game = new Game();
 //    if(confirm('Start a new Game?')) {
-        game.run();
+        game.start();
 //    }
 }
